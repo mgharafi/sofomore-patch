@@ -4,9 +4,29 @@ from moarchiving import BiobjectiveNondominatedSortedList as NDA
 
 import os
 from pathlib import Path
-from abc import ABC, abstractmethod, update_abstractmethods
+from abc import ABC, abstractmethod
 
-from zmq import has
+
+# Function to dynamically update and add abstract methods
+def update_abstractmethods(cls, new_methods=None):
+    """
+    Dynamically update the abstract methods of a class.
+
+    Args:
+        cls: The class whose abstract methods need updating.
+        new_methods: A dictionary of method names and implementations.
+    """
+    # for name, func in new_methods.items():
+    #     setattr(cls, name, func)
+
+    # Recalculate abstract methods
+    cls.__abstractmethods__ = frozenset(
+        name
+        for name in dir(cls)
+        if getattr(cls, name, None)
+        and getattr(getattr(cls, name), "__isabstractmethod__", False)
+    )
+
 
 
 def kernelBuilder(Algorithm, other_attributes={}):
